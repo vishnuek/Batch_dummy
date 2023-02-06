@@ -1,0 +1,28 @@
+api:
+  jobdiva:
+    auth:
+      username: api.mbo.test@mbopartners.com
+      clientid: 2121
+      password: Ap1JD!vaPAs$79247
+
+feign:
+  repository:
+    jobdiva:
+        url: ${JOB_DIVA_BASE_URL:https://api.jobdiva.com/apiv2}
+        name: jobDivaApiRepository
+        auth:
+          api:
+            getAccessToken:
+              endpoint: ${JOB_DIVA_ACCESS_TOKEN_URL:/authenticate}
+
+spring:
+  batch:
+    job:
+      enabled : false
+    initialize-schema : ALWAYS
+  datasource:
+    url : jdbc:postgresql://localhost:5432/testDataBase1?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false
+    username : postgres
+    password : postgres
+    #platform : mysql
+    initialization-mode : always
