@@ -11,7 +11,7 @@ public class MyCustomProcessor implements ItemProcessor<String, String> {
 
     private Long jobId;
 
-    public MyCustomProcessor( @Value("#{stepExecution.jobExecution.id}") Long jobId) {
+    public MyCustomProcessor(@Value("#{stepExecution.jobExecution.id}") Long jobId) {
         this.jobId = jobId;
     }
 

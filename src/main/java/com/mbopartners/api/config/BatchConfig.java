@@ -14,6 +14,7 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +33,7 @@ public class BatchConfig {
     public StepBuilderFactory stepBuilderFactory;
 
     @Order(1)
-    @Bean
+    @Bean(name = "processJob")
     public Job processJob(Step createStep) {
         System.out.println("ProcessJob Method");
         return jobBuilderFactory.get("processJob")
@@ -44,10 +45,10 @@ public class BatchConfig {
     }
 
     @Bean
-    public Step createStep(@Qualifier("MyCustomProcessor") ItemProcessor<String, String> processor) {
+    public Step createStep(@Qualifier("MyCustomReader") ItemReader<String> reader, @Qualifier("MyCustomProcessor") ItemProcessor<String, String> processor) {
         System.out.println("CreateStep Method");
         return stepBuilderFactory.get("createStep").<String, String> chunk(1)
-                .reader(new MyCustomReader()).processor(processor)
+                .reader(reader).processor(processor)
                 .writer(new MyCustomWriter()).build();
     }
 
@@ -58,7 +59,7 @@ public class BatchConfig {
 
 
     @Order(2)
-    @Bean
+    @Bean(name = "runningTest")
     public Job runningTest(Step runningStep) {
         System.out.println("runningTest Method");
         return jobBuilderFactory.get("runningTest")
@@ -70,10 +71,10 @@ public class BatchConfig {
 
 
     @Bean
-    public Step runningStep(@Qualifier("RunningProcessor") ItemProcessor<String, String> processor) {
+    public Step runningStep(@Qualifier("RunningReader") ItemReader<String> reader, @Qualifier("RunningProcessor") ItemProcessor<String, String> processor) {
         System.out.println("runningStep Method");
         return stepBuilderFactory.get("runningStep").<String, String> chunk(1)
-                .reader(new RunningReader()).processor(processor)
+                .reader(reader).processor(processor)
                 .writer(new RunningWriter()).build();
     }
 
